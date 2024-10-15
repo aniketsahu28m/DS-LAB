@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *prev;
+    struct node *next;
+};
+
+typedef struct node *NODE;
+
+NODE getnode() {
+    NODE x;
+    x = (NODE)malloc(sizeof(struct node));
+    if (x == NULL) {
+        printf("Out of memory\n");
+        exit(0);
+    }
+    return x;
+}
+
+void insert_rear(NODE *head, int item) {
+    NODE temp, cur;
+    temp = getnode();
+    temp->data = item;
+    temp->next = NULL;
+    if (*head == NULL) {
+        temp->prev = NULL;
+        *head = temp;
+        return;
+    }
+    cur = *head;
+    while (cur->next != NULL)
+        cur = cur->next;
+    cur->next = temp;
+    temp->prev = cur;
+}
+
+NODE union_lists(NODE head1, NODE head2) {
+    NODE result = NULL;
+    NODE temp = head1;
+    while (temp != NULL) {
+        insert_rear(&result, temp->data);
+        temp = temp->next;
+    }
+    temp = head2;
+    while (temp != NULL) {
+        NODE cur = result;
+        int found = 0;
+        while (cur != NULL) {
+            if (cur->data == temp->data) {
+                found = 1;
+                break;
+            }
+            cur = cur->next;
+        }
+        if (!found)
+            insert_rear(&result, temp->data);
+        temp = temp->next;
+    }
+    return result;
+}
+
+NODE intersection_lists(NODE head1, NODE head2) {
+    NODE result = NULL;
+    NODE temp = head1;
+    while (temp != NULL) {
+        NODE cur = head2;
+        while (cur != NULL) {
+            if (temp->data == cur->data) {
+                insert_rear(&result, temp->data);
+                break;
+            }
+            cur = cur->next;
+        }
+        temp = temp->next;
+    }
+    return result;
+}
+
+void display(NODE head) {
+    NODE temp = head;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    NODE list1 = NULL;
+    NODE list2 = NULL;
+
+    // Inserting elements into list1
+    insert_rear(&list1, 1);
+    insert_rear(&list1, 2);
+    insert_rear(&list1, 3);
+
+    // Inserting elements into list2
+    insert_rear(&list2, 3);
+    insert_rear(&list2, 4);
+    insert_rear(&list2, 5);
+
+    // Displaying the lists
+    printf("List 1: ");
+    display(list1);
+    printf("List 2: ");
+    display(list2);
+
+    // Union of the lists
+    NODE union_result = union_lists(list1, list2);
+    printf("Union: ");
+    display(union_result);
+
+    // Intersection of the lists
+    NODE intersection_result = intersection_lists(list1, list2);
+    printf("Intersection: ");
+    display(intersection_result);
+
+    return 0;
+}
