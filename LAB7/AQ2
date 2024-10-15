@@ -1,0 +1,82 @@
+// Let X = (x1, x2….xn) and Y = (y1, y2….yn) be 2 linked lists. Assume that, in each list,
+// the nodes are in non-decreasing order of the data field values. Write an algorithm to
+// merge two lists to obtain a new linked list Z in which the nodes are also in the non-
+// decreasing order. Following the merge, X and Y do not exist as individual lists. Each
+// node initially in X or Y is now in Z. Do not use additional nodes.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node *nodePtr;
+struct node {
+    int data;
+    nodePtr link;
+};
+
+nodePtr merge(nodePtr x, nodePtr y)
+{
+    nodePtr z, temp;
+    if (!x) return y;
+    if (!y) return x;
+    if (x->data <= y->data) {
+        z = x;
+        x = x->link;
+    } else {
+        z = y;
+        y = y->link;
+    }
+    temp = z;
+    while (x && y) {
+        if (x->data <= y->data) {
+            temp->link = x;
+            x = x->link;
+        } else {
+            temp->link = y;
+            y = y->link;
+        }
+        temp = temp->link;
+    }
+    if (x) temp->link = x;
+    if (y) temp->link = y;
+    return z;
+}
+
+void printList(nodePtr head)
+{
+    while (head) {
+        printf("%d ", head->data);
+        head = head->link;
+    }
+    printf("\n");
+}
+
+nodePtr createNode(int data)
+{
+    nodePtr newNode = (nodePtr)malloc(sizeof(struct node));
+    newNode->data = data;
+    newNode->link = NULL;
+    return newNode;
+}
+
+int main()
+{
+    nodePtr x = createNode(1);
+    x->link = createNode(3);
+    x->link->link = createNode(5);
+
+    nodePtr y = createNode(2);
+    y->link = createNode(4);
+    y->link->link = createNode(6);
+
+    printf("List X: ");
+    printList(x);
+    printf("List Y: ");
+    printList(y);
+
+    nodePtr z = merge(x, y);
+
+    printf("Merged list Z: ");
+    printList(z);
+
+    return 0;
+}
