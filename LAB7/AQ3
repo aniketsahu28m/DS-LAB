@@ -1,0 +1,56 @@
+// Let list1 = (x1, x2…..xn) and list2= (y1, y2…..ym). Write a function to merge list1 and
+// list2 to obtain list3 = (x1, y1, x2, y2….xm,ym,xm+1…xn) for m<=n; and list3=(x1,
+// y1,x2,y2…..xn, yn, xn+1….xm) for m>n.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 100
+
+void merge_lists(int list1[], int n, int list2[], int m, int list3[]) {
+    int i = 0, j = 0, k = 0;
+
+    while (i < n && j < m) {
+        list3[k++] = list1[i++];
+        list3[k++] = list2[j++];
+    }
+
+    while (i < n) {
+        list3[k++] = list1[i++];
+    }
+
+    while (j < m) {
+        list3[k++] = list2[j++];
+    }
+}
+
+int main() {
+    int list1[MAX_SIZE], list2[MAX_SIZE], list3[MAX_SIZE * 2];
+    int n, m, i;
+
+    printf("Enter the number of elements in list1: ");
+    scanf("%d", &n);
+
+    printf("Enter the elements of list1:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &list1[i]);
+    }
+
+    printf("Enter the number of elements in list2: ");
+    scanf("%d", &m);
+
+    printf("Enter the elements of list2:\n");
+    for (i = 0; i < m; i++) {
+        scanf("%d", &list2[i]);
+    }
+
+    merge_lists(list1, n, list2, m, list3);
+
+    printf("Merged list:\n");
+    for (i = 0; i < n + m; i++) {
+        printf("%d ", list3[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
