@@ -1,0 +1,144 @@
+// Write a program to implement stack & queue using Singly linked lists.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+	int data;
+	struct node *next;
+} node;
+
+node *top = NULL;  // For stack
+node *front = NULL, *rear = NULL;  // For queue
+
+// Stack operations
+void push(int x)
+{
+	node *newNode = (node*)malloc(sizeof(node));
+	newNode->data = x;
+	newNode->next = top;
+	top = newNode;
+}
+
+int pop()
+{
+	if (top == NULL)
+	{
+		printf("Stack is empty\n");
+		return -1;
+	}
+	int x = top->data;
+	node *temp = top;
+	top = top->next;
+	free(temp);
+	return x;
+}
+
+// Queue operations
+void enqueue(int x)
+{
+	node *newNode = (node*)malloc(sizeof(node));
+	newNode->data = x;
+	newNode->next = NULL;
+	if (rear == NULL)
+	{
+		front = rear = newNode;
+		return;
+	}
+	rear->next = newNode;
+	rear = newNode;
+}
+
+int dequeue()
+{
+	if (front == NULL)
+	{
+		printf("Queue is empty\n");
+		return -1;
+	}
+	int x = front->data;
+	node *temp = front;
+	front = front->next;
+	if (front == NULL)
+		rear = NULL;
+	free(temp);
+	return x;
+}
+
+// Function to display stack
+void displayStack()
+{
+	node *temp = top;
+	while (temp != NULL)
+	{
+		printf("%d ", temp->data);
+		temp = temp->next;
+	}
+	printf("\n");
+}
+
+// Function to display queue
+void displayQueue()
+{
+	node *temp = front;
+	while (temp != NULL)
+	{
+		printf("%d ", temp->data);
+		temp = temp->next;
+	}
+	printf("\n");
+}
+
+int main()
+{
+	int choice, x;
+	while (1)
+	{
+		printf("\n1. Push to stack\n");
+		printf("2. Pop from stack\n");
+		printf("3. Display stack\n");
+		printf("4. Enqueue to queue\n");
+		printf("5. Dequeue from queue\n");
+		printf("6. Display queue\n");
+		printf("7. Exit\n");
+		printf("Enter your choice: ");
+		scanf("%d", &choice);
+		switch (choice)
+		{
+			case 1:
+				printf("Enter element to push: ");
+				scanf("%d", &x);
+				push(x);
+				break;
+			case 2:
+				x = pop();
+				if (x != -1)
+					printf("Popped element: %d\n", x);
+				break;
+			case 3:
+				printf("Stack: ");
+				displayStack();
+				break;
+			case 4:
+				printf("Enter element to enqueue: ");
+				scanf("%d", &x);
+				enqueue(x);
+				break;
+			case 5:
+				x = dequeue();
+				if (x != -1)
+					printf("Dequeued element: %d\n", x);
+				break;
+			case 6:
+				printf("Queue: ");
+				displayQueue();
+				break;
+			case 7:
+				exit(0);
+			default:
+				printf("Invalid choice\n");
+		}
+	}
+	return 0;
+}
