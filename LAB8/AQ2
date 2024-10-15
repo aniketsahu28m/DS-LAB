@@ -1,0 +1,82 @@
+// Write a program to implement addition of two long positive integer numbers using doubly linked list.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_DIGITS 100
+
+typedef struct node {
+    int digit;
+    struct node *left;
+    struct node *right;
+} Node;
+
+Node* createNode(int digit) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->digit = digit;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+void insertDigit(Node** head, int digit) {
+    Node* newNode = createNode(digit);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        newNode->right = *head;
+        (*head)->left = newNode;
+        *head = newNode;
+    }
+}
+
+void addNumbers(Node* num1, Node* num2, Node** result) {
+    int carry = 0, sum;
+    Node *ptr1 = num1, *ptr2 = num2;
+
+    while (ptr1 || ptr2 || carry) {
+        sum = carry;
+        if (ptr1) {
+            sum += ptr1->digit;
+            ptr1 = ptr1->right;
+        }
+        if (ptr2) {
+            sum += ptr2->digit;
+            ptr2 = ptr2->right;
+        }
+        insertDigit(result, sum % 10);
+        carry = sum / 10;
+    }
+}
+
+void printNumber(Node* head) {
+    if (head == NULL) return;
+    printNumber(head->right);
+    printf("%d", head->digit);
+}
+
+int main() {
+    Node *num1 = NULL, *num2 = NULL, *result = NULL;
+    char str[MAX_DIGITS];
+    int i;
+
+    printf("Enter first number: ");
+    scanf("%s", str);
+    for (i = 0; str[i] != '\0'; i++) {
+        insertDigit(&num1, str[i] - '0');
+    }
+
+    printf("Enter second number: ");
+    scanf("%s", str);
+    for (i = 0; str[i] != '\0'; i++) {
+        insertDigit(&num2, str[i] - '0');
+    }
+
+    addNumbers(num1, num2, &result);
+
+    printf("Sum: ");
+    printNumber(result);
+    printf("\n");
+
+    return 0;
+}
